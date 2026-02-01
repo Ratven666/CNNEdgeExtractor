@@ -1,16 +1,101 @@
-# This is a sample Python script.
+from pathlib import Path
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+import numpy as np
+
+from app.base.dem.Dem import Dem
+from app.base.mesh.Mesh import Mesh
+from app.base.scan.Scan import Scan
+from app.cnn_pytorch.DEMPredictor import DEMPredictor, visualize_results
+
+scan = Scan("Cloud")
+scan.import_points_from_file(file_path="src/CLOUD.txt")
+print(scan)
+
+mesh = Mesh("Cloud_mesh")
+mesh.create_mesh_from_scan(scan=scan)
+print(mesh)
+
+dem = Dem.create_dem_from_mesh(mesh, resolution=0.25)
+dem.save("cloud_025m.tif")
+print(dem)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+def main():
+    # Параметры
+    MODEL_PATH = Path("app/cnn_pytorch/models/best_edge_extractor.pth")
+    DEM_PATH = Path("cloud_025m.tif")  # Путь к полному DEM
+    OUTPUT_PATH = Path("predicted_edges.tif")
+
+    # Создаём директорию для результатов
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+    print("=" * 70)
+    print("ПРЕДСКАЗАНИЕ БРОВОК НА ПОЛНОМ DEM")
+    print("=" * 70)
+
+    # Проверяем наличие файлов
+    if not MODEL_PATH.exists():
+        print(f"❌ Модель не найдена: {MODEL_PATH}")
+        return
+
+    if not DEM_PATH.exists():
+        print(f"❌ DEM не найден: {DEM_PATH}")
+        return
+
+    # Создаём предиктор
+    predictor = DEMPredictor(
+        model_path=MODEL_PATH,
+        device='mps',  # Или 'cuda', 'cpu'
+        window_size=100,
+        overlap=20
+    )
+
+    # Предсказание
+    prediction_binary, prediction_prob = predictor.predict_full_dem(
+        dem_path=DEM_PATH,
+        output_path=OUTPUT_PATH,
+        threshold=0.5
+    )
+
+    # Статистика
+    total_pixels = prediction_binary.size
+    edge_pixels = np.sum(prediction_binary)
+    edge_percentage = (edge_pixels / total_pixels) * 100
+
+    print(f"\nСтатистика:")
+    print(f"  Всего пикселей: {total_pixels:,}")
+    print(f"  Пикселей бровок: {edge_pixels:,}")
+    print(f"  Процент бровок: {edge_percentage:.2f}%")
+
+    # Визуализация всего изображения
+    print("\nГенерация визуализации (полный размер)...")
+    visualize_results(
+        dem_path=DEM_PATH,
+        prediction_path=OUTPUT_PATH,
+        save_path='result_full.png'
+    )
+
+    # Zoom на интересный участок (центральная часть)
+    print("Генерация zoom визуализации...")
+    h, w = prediction_binary.shape
+    zoom_size = 300
+    center_h, center_w = h // 2, w // 2
+
+    visualize_results(
+        dem_path=DEM_PATH,
+        prediction_path=OUTPUT_PATH,
+        save_path='result_zoom.png',
+        zoom_box=(
+            center_h - zoom_size // 2,
+            center_h + zoom_size // 2,
+            center_w - zoom_size // 2,
+            center_w + zoom_size // 2
+        )
+    )
+
+    print("\n✓ Готово!")
+    print(f"\nФайлы сохранены в: {OUTPUT_PATH.parent.absolute()}")
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if __name__ == "__main__":
+    main()

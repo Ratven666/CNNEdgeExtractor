@@ -213,3 +213,13 @@ __marimo__/
 src/
 
 test.py
+
+app/cnn_pytorch/output/
+
+app/cnn_pytorch/predictions_binary/
+
+data/1m/augmented/
+
+*.xml
+
+app/cnn_pytorch/models/

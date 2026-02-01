@@ -64,13 +64,13 @@ if __name__ == "__main__":
     print(mesh)
 
     dem = Dem.create_dem_from_mesh(data_odj=mesh,
-                                   resolution=1,
+                                   resolution=0.5,
                                    name="Grib",
                                    dem_creator=DemCreatorFromMesh)
 
     print(dem)
 
-    dem.save(file_path="grib_1m.tif")
+    dem.save(file_path="grib_05m.tif")
 
     # dem = Dem.load(file_path="dem.tif")
     #
