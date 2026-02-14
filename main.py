@@ -15,7 +15,7 @@ mesh = Mesh("MeshCloud")
 mesh.create_mesh_from_scan(scan)
 print(mesh)
 
-dem = Dem.create_dem_from_mesh(data_odj=mesh, resolution=0.25, name="DemCloud")
+dem = Dem.create_from_mesh(data_odj=mesh, resolution=0.25, name="DemCloud")
 dem.save("src/PCLD_dem_025.tif")
 
 

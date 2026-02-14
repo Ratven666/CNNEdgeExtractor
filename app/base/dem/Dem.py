@@ -1,7 +1,7 @@
 import numpy as np
 import rasterio
 
-from app.base.dem.dem_creators.DemCreatorFromMesh import DemCreatorFromMesh
+from app.base.dem.dem_creators.DemCreatorFromMeshMultiRays import DemCreatorFromMeshMultiRays
 from app.base.dem.dem_loader.RasterioDemLoader import RasterioDemLoader
 from app.base.dem.dem_saver.RasterioDemSaver import RasterioDemSaver
 from app.base.dem.plotters.MplDemPlotter import MplDemPlotter
@@ -18,7 +18,7 @@ class Dem:
         self.bounds = {}
 
     @classmethod
-    def create_dem_from_mesh(cls, data_odj, resolution, name="DefaultDemName", dem_creator=DemCreatorFromMesh):
+    def create_from_mesh(cls, data_odj, resolution, name="DefaultDemName", dem_creator=DemCreatorFromMeshMultiRays):
         dem = cls(name=name, resolution=resolution)
         dem_creator = dem_creator(dem=dem)
         dem = dem_creator.create(data_odj)
@@ -63,10 +63,9 @@ if __name__ == "__main__":
     mesh = Mesh(name="Grib").load_mesh_from_file(filepath=r"../../../src/Grib_dxf_mesh.dxf")
     print(mesh)
 
-    dem = Dem.create_dem_from_mesh(data_odj=mesh,
-                                   resolution=0.5,
-                                   name="Grib",
-                                   dem_creator=DemCreatorFromMesh)
+    dem = Dem.create_from_mesh(data_odj=mesh,
+                               resolution=0.5,
+                               name="Grib",)
 
     print(dem)
 

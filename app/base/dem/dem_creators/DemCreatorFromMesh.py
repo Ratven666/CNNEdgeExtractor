@@ -58,9 +58,9 @@ if __name__ == "__main__":
     mesh = Mesh(name="Grib").load_mesh_from_file(filepath=r"../../../../src/Grib_dxf_mesh.dxf")
     print(mesh)
 
-    dem = Dem.create_dem_from_mesh(data_odj=mesh,
-                                   resolution=10,
-                                   name="Grib",
-                                   dem_creator=DemCreatorFromMesh)
+    dem = Dem.create_from_mesh(data_odj=mesh,
+                               resolution=10,
+                               name="Grib",
+                               dem_creator=DemCreatorFromMesh)
 
     print(dem)

@@ -19,18 +19,19 @@ class RasterioDemSaver(DemSaverABC):
                                 self.dem.width,
                                 self.dem.height)
 
+        dtype = self.dem.dem_array.dtype
+        nodata = np.nan
+        if np.issubdtype(dtype, np.integer):
+            nodata = None  # или 0, если хочешь явный код
+
         with rasterio.open(
-                f"{file_path}",
-                "w",
+                file_path, "w",
                 driver="GTiff",
                 height=self.dem.height,
                 width=self.dem.width,
                 count=1,
-                dtype=self.dem.dem_array.dtype,
-                # crs="EPSG:32636",  # укажи свой EPSG, например 32636 для UTM 36N
+                dtype=dtype,
                 transform=transform,
-                nodata=np.nan
+                nodata=nodata,
         ) as dst:
             dst.write(self.dem.dem_array, 1)
-
-
