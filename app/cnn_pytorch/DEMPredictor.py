@@ -39,6 +39,12 @@ class DEMPredictor:
         self.stride = window_size - overlap
 
         # Загружаем модель
+        if torch.cuda.is_available():
+            self.device = torch.device("cuda")
+        elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+            self.device = torch.device("mps")
+        else:
+            self.device = torch.device("cpu")
         self.model = UNet(in_channels=1, out_channels=1).to(self.device)
         checkpoint = torch.load(model_path, map_location=self.device)
         self.model.load_state_dict(checkpoint['model_state_dict'])
@@ -273,8 +279,8 @@ def visualize_results(dem_path, prediction_path, save_path='result_visualization
 def main():
     # Параметры
     MODEL_PATH = Path("models/best_edge_extractor.pth")
-    # DEM_PATH = Path("../../data/1m/grib_1m.tif")  # Путь к полному DEM
-    DEM_PATH = Path("../../data/grib_05m.tif")  # Путь к полному DEM
+    DEM_PATH = Path("../../data/1m/grib_1m.tif")  # Путь к полному DEM
+    # DEM_PATH = Path("../../data/grib_05m.tif")  # Путь к полному DEM
     OUTPUT_PATH = Path("output/predicted_edges.tif")
 
     # Создаём директорию для результатов

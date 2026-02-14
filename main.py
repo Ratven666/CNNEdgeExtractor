@@ -5,26 +5,25 @@ import numpy as np
 from app.base.dem.Dem import Dem
 from app.base.mesh.Mesh import Mesh
 from app.base.scan.Scan import Scan
-from app.cnn_pytorch.DEMPredictor import DEMPredictor, visualize_results
+from app.cnn_pytorch.DEMPredictor import visualize_results, DEMPredictor
 
-scan = Scan("Cloud")
-scan.import_points_from_file(file_path="src/CLOUD.txt")
+scan = Scan("PCLD")
+scan.import_points_from_file("src/PCLD.las")
 print(scan)
 
-mesh = Mesh("Cloud_mesh")
-mesh.create_mesh_from_scan(scan=scan)
+mesh = Mesh("MeshCloud")
+mesh.create_mesh_from_scan(scan)
 print(mesh)
 
-dem = Dem.create_dem_from_mesh(mesh, resolution=0.25)
-dem.save("cloud_025m.tif")
-print(dem)
+dem = Dem.create_dem_from_mesh(data_odj=mesh, resolution=0.25, name="DemCloud")
+dem.save("src/PCLD_dem_025.tif")
 
 
 def main():
     # Параметры
-    MODEL_PATH = Path("app/cnn_pytorch/models/best_edge_extractor.pth")
-    DEM_PATH = Path("cloud_025m.tif")  # Путь к полному DEM
-    OUTPUT_PATH = Path("predicted_edges.tif")
+    MODEL_PATH = Path("./app/cnn_pytorch/models/best_edge_extractor.pth")
+    DEM_PATH = Path("src/PCLD_dem_025.tif")  # Путь к полному DEM
+    OUTPUT_PATH = Path(f"src/PCLD_Dem_predict_025m.tif")
 
     # Создаём директорию для результатов
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -72,7 +71,7 @@ def main():
     visualize_results(
         dem_path=DEM_PATH,
         prediction_path=OUTPUT_PATH,
-        save_path='result_full.png'
+        save_path='output/result_full.png'
     )
 
     # Zoom на интересный участок (центральная часть)
@@ -84,7 +83,7 @@ def main():
     visualize_results(
         dem_path=DEM_PATH,
         prediction_path=OUTPUT_PATH,
-        save_path='result_zoom.png',
+        save_path='output/result_zoom.png',
         zoom_box=(
             center_h - zoom_size // 2,
             center_h + zoom_size // 2,
@@ -97,5 +96,4 @@ def main():
     print(f"\nФайлы сохранены в: {OUTPUT_PATH.parent.absolute()}")
 
 
-if __name__ == "__main__":
-    main()
+main()
