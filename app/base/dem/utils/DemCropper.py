@@ -1,8 +1,6 @@
 import numpy as np
 
 
-
-
 class DemCropper:
 
     def __init__(self, source_dem):

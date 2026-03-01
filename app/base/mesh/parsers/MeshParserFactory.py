@@ -1,4 +1,3 @@
-
 from app.base.mesh.parsers.MeshDxfParser import MeshDxfParser
 from app.base.mesh.parsers.MeshParserABC import MeshParserABC
 

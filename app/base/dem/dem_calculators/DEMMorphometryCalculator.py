@@ -82,7 +82,7 @@ class DEMMorphometryCalculator:
 if __name__ == '__main__':
 
 
-    dem = Dem.load(file_path="../grib_05m.tif")
+    dem = Dem.load(file_path="../cr_05m.tif")
 
     # dem.plot()
     print(dem)
@@ -95,13 +95,13 @@ if __name__ == '__main__':
     slope_dem = pf.compute_slope()
     # print(type(c_map), c_map.shape)
     print(type(cropped_dem.dem_array), cropped_dem.dem_array.shape)
-    slope_dem.save(file_path="../slope_grib_05m.tif")
+    slope_dem.save(file_path="../cr_slope_grib_05m.tif")
     slope_dem.plot()
 
     aspect_dem = pf.compute_aspect()
-    aspect_dem.save(file_path="../aspect_grib_05m.tif")
+    aspect_dem.save(file_path="../cr_aspect_grib_05m.tif")
     aspect_dem.plot()
 
     total_curvature = pf.compute_total_curvature()
-    total_curvature.save(file_path="../total_curvature_grib_05m.tif")
+    total_curvature.save(file_path="../cr_total_curvature_grib_05m.tif")
     total_curvature.plot()

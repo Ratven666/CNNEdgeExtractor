@@ -1,4 +1,3 @@
-import numpy as np
 import rasterio
 
 from app.base.dem.dem_creators.DemCreatorFromMeshMultiRays import DemCreatorFromMeshMultiRays
@@ -75,8 +74,8 @@ if __name__ == "__main__":
     #
     # # dem.plot()
     # print(dem)
-    #
-    # cropped_dem = dem.crop(x_min=280500, y_min=535200, crop_width=100,
-    #                        crop_height=100)
-    # # cropped_dem.plot()
-    # cropped_dem.save(file_path="cr_1.tif")
+
+    cropped_dem = dem.crop(x_min=280500, y_min=535200, crop_width=100,
+                           crop_height=100)
+    # cropped_dem.plot()
+    cropped_dem.save(file_path="cr_05m.tif")

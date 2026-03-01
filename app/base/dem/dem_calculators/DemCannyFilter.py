@@ -60,13 +60,13 @@ class DemCannyFilter:
 if __name__ == "__main__":
     from app.base.dem.Dem import Dem
 
-    dem = Dem.load(file_path="../slope_grib_05m.tif")
+    dem = Dem.load(file_path="../cr_slope_grib_05m.tif")
     print(dem)
 
     canny_filter = DemCannyFilter(dem)
     edges = canny_filter.compute_edges(sigma=1.0,
                                        use_quantiles=True)
-    edges.save(file_path="../canny_grib_05m.tif")
+    edges.save(file_path="../cr_canny_grib_05m.tif")
     edges.plot()
 
 
