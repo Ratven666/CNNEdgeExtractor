@@ -1,0 +1,9 @@
+raw_dem: data/raw/1m/grib_1m.tif
+raw_labels_dxf: data/raw/Grib_dxf_mesh.dxf
+processed_dir: data/processed
+resolution: 1.0
+tile_size: 100
+stride: 100
+train_ratio: 0.6
+val_ratio: 0.2
+seed: 42

@@ -1,0 +1,7 @@
+checkpoint: models/checkpoints/best.ckpt
+input_dem: data/raw/1m/grib_1m.tif
+output_mask: outputs/predictions/grib_edges.tif
+window_size: 100
+overlap: 20
+threshold: 0.5
+device: auto
