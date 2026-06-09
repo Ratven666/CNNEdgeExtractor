@@ -1,0 +1,9 @@
+data_dir: data/processed
+checkpoint_dir: models/checkpoints
+batch_size: 4
+epochs: 50
+learning_rate: 0.001
+num_workers: 0
+normalize_type: zscore
+device: auto
+threshold: 0.5
